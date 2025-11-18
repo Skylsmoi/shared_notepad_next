@@ -30,7 +30,15 @@ export async function getPadList(): Promise<SavedPadType[]> {
   const result = await db.all(query)
   console.log('result', result);
 
-  return result
+  return result.map(p => {
+    const dateObject = new Date(Number(p.modified));
+    const dateString =  `${dateObject.toLocaleDateString()} ${dateObject.toLocaleTimeString()}`
+    console.log('dateString', dateString)
+    return {
+      ...p,
+      modified: dateString,
+    }
+  })
 }
 
 export async function savePad(name:string, text:string): Promise<void> {

@@ -1,8 +1,8 @@
-import {MouseEventHandler} from "react";
+import {MouseEventHandler, ReactNode} from "react";
 
 interface ButtonProps {
-  label: string;
-  onClick?: MouseEventHandler<HTMLButtonElement>
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  children: ReactNode;
 }
 
 export const Button = (props:ButtonProps) => {
@@ -11,7 +11,7 @@ export const Button = (props:ButtonProps) => {
       className='cursor-pointer py-1 px-3 rounded-md bg-gray-900 hover:bg-gray-600'
       onClick={props.onClick}
     >
-      {props.label}
+      {props.children}
     </button>
   )
 }

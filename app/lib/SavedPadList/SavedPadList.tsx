@@ -17,20 +17,27 @@ export const SavedPadList = (props: SavedPadListProps) => {
 
   return (
     <div className='flex flex-col gap-2'>
+      <h2 className='font-bold'>Saved pad</h2>
+
       {props.padList.map(p => (
         <div
           className='flex flex-row gap-2 justify-end'
           key={p.id}
         >
           <Button
-            label={p.name}
             onClick={() => setCurrentPad(p)}
-          />
+          >
+            <div className='flex flex-col'>
+              <div className='self-start text-lg'>{p.name}</div>
+              <div className='self-end text-xs opacity-60'>{p.modified}</div>
+            </div>
+          </Button>
 
           <Button
-            label={'x'}
             onClick={() => deletePad(p.id)}
-          />
+          >
+            x
+          </Button>
         </div>
       ))}
     </div>

@@ -33,9 +33,10 @@ export const SavePadButton = (props: SavePadButtonProps) => {
       />
 
       <Button
-        label={'Save Pad'}
         onClick={handleClickSaveButton}
-      />
+      >
+        Save Pad
+      </Button>
     </div>
   )
 }
