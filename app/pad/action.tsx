@@ -5,6 +5,7 @@ import sqlite3 from "sqlite3";
 import SQL from 'sql-template-strings'
 import {revalidatePath} from "next/cache";
 import {SavedPadType} from '../lib/SavedPadList/SavedPadList'
+import {sleep} from "@/app/lib/utilServer";
 
 const db = await open({
   filename: 'db/dev.db',
@@ -51,6 +52,8 @@ export async function savePad(name:string, text:string): Promise<void> {
 
   const result = await db.run(query);
   console.log('result', result);
+
+  await sleep(1000)
 
   revalidatePath('/pad');
 }

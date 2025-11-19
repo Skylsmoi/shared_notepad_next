@@ -1,6 +1,6 @@
 'use client'
 
-import {ChangeEvent, useState, useRef} from 'react';
+import {ChangeEvent, useState, useRef, useTransition} from 'react';
 import {getPadList, savePad} from '@/app/pad/action'
 import {Button} from "@/app/lib/Button/Button";
 import {Modal} from "@/app/lib/Modal/Modal";
@@ -11,12 +11,17 @@ interface SavePadButtonProps {
 
 export const SavePadButton = (props: SavePadButtonProps) => {
   const [padName, setPadName] = useState<string>('');
-  const [messageError, setMessageError] = useState<string>('');
+  const [message, setMessage] = useState<string>('');
   const dialogElementRef = useRef<HTMLDialogElement>(null);
+  const [isSavePadPending, startSavePadTransition] = useTransition();
+
+  if (isSavePadPending) {
+    return (<div>Saving...</div>)
+  }
 
   const handleClickSaveButton = async () => {
     if (padName === '') {
-      setMessageError('Pad name cannot be empty');
+      setMessage('Pad name cannot be empty');
       return
     }
 
@@ -26,7 +31,12 @@ export const SavePadButton = (props: SavePadButtonProps) => {
       return
     }
 
-    savePad(padName, props.currentPad);
+    startSavePadTransition(async () => {
+      await savePad(padName, props.currentPad);
+      startSavePadTransition(() => {
+        setMessage('Pad saved');
+      })
+    })
   }
 
   const handleClickModalSaveButton = () => {
@@ -41,7 +51,7 @@ export const SavePadButton = (props: SavePadButtonProps) => {
   return (
     <>
       <div className='SavePadButton flex flex-row items-center gap-4'>
-        <div className='text-red-100 opacity-75'>{messageError}</div>
+        <div className='text-red-100 opacity-75'>{message}</div>
 
         <label className='flex flex-row gap-2 items-center'>
           Pad name:

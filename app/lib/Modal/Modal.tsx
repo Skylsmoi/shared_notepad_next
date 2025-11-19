@@ -1,8 +1,8 @@
 'use client'
 
 import {ReactNode, RefObject} from "react";
-import {createPortal} from "react-dom";
 import {Button} from "@/app/lib/Button/Button";
+import ClientOnlyPortal from "@/app/lib/utilClient";
 
 interface ModalProps {
   dialogElementRef: RefObject<HTMLDialogElement | null>;
@@ -11,9 +11,9 @@ interface ModalProps {
 }
 
 export function Modal (props: ModalProps) {
-  /* eslint-disable react-hooks/refs */ // see https://github.com/facebook/react/issues/34775
+  /* eslint-disable react-hooks/refs */
   return (
-    createPortal(
+    <ClientOnlyPortal selector={'body'}>
       <dialog
         className={`
           Modal
@@ -41,8 +41,7 @@ export function Modal (props: ModalProps) {
 
         </div>
       </dialog>,
-      document.body
-    )
+    </ClientOnlyPortal>
   )
   /* eslint-enable react-hooks/refs */
 }

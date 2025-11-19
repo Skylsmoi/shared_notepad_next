@@ -15,7 +15,6 @@ interface SavedPadListProps {
 }
 
 export const SavedPadList = (props: SavedPadListProps) => {
-
   return (
     <div className='flex flex-col gap-2'>
       <Button
