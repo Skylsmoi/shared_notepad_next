@@ -2,6 +2,7 @@ import {MouseEventHandler, ReactNode} from "react";
 
 interface ButtonProps {
   onClick?: MouseEventHandler<HTMLButtonElement>;
+  title: string;
   children: ReactNode;
 }
 
@@ -10,6 +11,7 @@ export const Button = (props:ButtonProps) => {
     <button
       className='cursor-pointer py-1 px-3 rounded-md bg-gray-900 hover:bg-gray-600'
       onClick={props.onClick}
+      title={props.title}
     >
       {props.children}
     </button>

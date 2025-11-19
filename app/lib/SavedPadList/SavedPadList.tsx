@@ -21,11 +21,12 @@ export const SavedPadList = (props: SavedPadListProps) => {
 
       {props.padList.map(p => (
         <div
-          className='flex flex-row gap-2 justify-end'
+          className='flex flex-row gap-2 justify-between'
           key={p.id}
         >
           <Button
             onClick={() => setCurrentPad(p)}
+            title='Open'
           >
             <div className='flex flex-col'>
               <div className='self-start text-lg'>{p.name}</div>
@@ -35,6 +36,7 @@ export const SavedPadList = (props: SavedPadListProps) => {
 
           <Button
             onClick={() => deletePad(p.id)}
+            title={'Delete'}
           >
             x
           </Button>
