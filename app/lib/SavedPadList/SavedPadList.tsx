@@ -1,4 +1,5 @@
 'use client'
+
 import {deletePad, setCurrentPad} from "@/app/pad/action";
 import {Button} from "@/app/lib/Button/Button";
 
@@ -17,6 +18,16 @@ export const SavedPadList = (props: SavedPadListProps) => {
 
   return (
     <div className='flex flex-col gap-2'>
+      <Button
+        onClick={() => setCurrentPad({ id: 0, name: '', text: '', modified: '' })}
+        title='New'
+        customClass='text-center py-3'
+      >
+        New Pad
+      </Button>
+
+      <hr />
+
       <h2 className='font-bold'>Saved pad</h2>
 
       {props.padList.map(p => (

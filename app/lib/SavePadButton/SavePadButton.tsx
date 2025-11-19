@@ -3,6 +3,7 @@
 import {ChangeEvent, useState, useRef} from 'react';
 import {getPadList, savePad} from '@/app/pad/action'
 import {Button} from "@/app/lib/Button/Button";
+import {Modal} from "@/app/lib/Modal/Modal";
 
 interface SavePadButtonProps {
   currentPad: string
@@ -29,8 +30,12 @@ export const SavePadButton = (props: SavePadButtonProps) => {
   }
 
   const handleClickModalSaveButton = () => {
-    dialogElementRef.current?.showModal()
     savePad(padName, props.currentPad);
+    dialogElementRef.current?.close()
+  }
+
+  const handleClickCloseModal = () => {
+    dialogElementRef.current?.close()
   }
 
   return (
@@ -38,12 +43,15 @@ export const SavePadButton = (props: SavePadButtonProps) => {
       <div className='SavePadButton flex flex-row items-center gap-4'>
         <div className='text-red-100 opacity-75'>{messageError}</div>
 
-        <input
-          type='text'
-          name='SavePadName'
-          className='border-1 border-gray-50 rounded-sm px-2 py-1'
-          onChange={(e:ChangeEvent<HTMLInputElement>): void => setPadName(e.target.value)}
-        />
+        <label className='flex flex-row gap-2 items-center'>
+          Pad name:
+          <input
+            type='text'
+            name='SavePadName'
+            className='border-1 border-gray-50 rounded-sm px-2 py-1'
+            onChange={(e:ChangeEvent<HTMLInputElement>): void => setPadName(e.target.value)}
+          />
+        </label>
 
         <Button
           onClick={handleClickSaveButton}
@@ -53,31 +61,22 @@ export const SavePadButton = (props: SavePadButtonProps) => {
         </Button>
       </div>
 
-      <dialog
-        className={`
-          SavePadButtonModal
-          top-1/2 left-1/2 -translate-1/2
-          p-4 rounded-md
-          backdrop:bg-gray-700 backdrop:opacity-60
-        `}
-        ref={dialogElementRef}
+      <Modal
+        dialogElementRef={dialogElementRef}
+        onClose={handleClickCloseModal}
       >
-        <div className='flex flex-col gap-4'>
-          <div>Name <span className="font-bold">{padName}</span> already exists. <br /> Overrides?</div>
+        <div>Name <span className="font-bold">{padName}</span> already exists. <br /> Overrides?</div>
 
-          <div className='flex flex-row justify-end gap-2 text-white'>
-            <Button title={'Cancel'} onClick={() => {
-              dialogElementRef.current?.close()
-            }}>
-              <div>Cancel</div>
-            </Button>
+        <div className='flex flex-row justify-end gap-2 text-white'>
+          <Button title={'Cancel'} onClick={handleClickCloseModal}>
+            <div>Cancel</div>
+          </Button>
 
-            <Button title={'Override'} onClick={handleClickModalSaveButton}>
-              <div>Override</div>
-            </Button>
-          </div>
+          <Button title={'Override'} onClick={handleClickModalSaveButton}>
+            <div>Override</div>
+          </Button>
         </div>
-      </dialog>
+      </Modal>
     </>
   )
 }
