@@ -31,21 +31,27 @@ export const SavedPadList = (props: SavedPadListProps) => {
 
       {props.padList.map(p => (
         <div
-          className='flex flex-row gap-2 justify-between'
+          className='flex flex-row w-full'
           key={p.id}
         >
           <Button
             onClick={() => setCurrentPad(p)}
-            title='Open'
+            rounded={false}
+            customClass={'rounded-l-md grow w-[calc(100%-32px)]'} // 32px is delete button width
+            title={p.name}
           >
-            <div className='flex flex-col'>
-              <div className='self-start text-lg'>{p.name}</div>
+            <div className='flex flex-col w-full'>
+              <div className='self-start text-md text-left w-full overflow-hidden text-ellipsis whitespace-nowrap'>
+                {p.name}
+              </div>
               <div className='self-end text-xs opacity-60'>{p.modified}</div>
             </div>
           </Button>
 
           <Button
             onClick={() => deletePad(p.id)}
+            rounded={false}
+            customClass={'rounded-r-md'}
             title={'Delete'}
           >
             x

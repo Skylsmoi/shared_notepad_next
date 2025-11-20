@@ -5,7 +5,7 @@ import sqlite3 from "sqlite3";
 import SQL from 'sql-template-strings'
 import {revalidatePath} from "next/cache";
 import {SavedPadType} from '../lib/SavedPadList/SavedPadList'
-import {sleep} from "@/app/lib/utilServer";
+import {sanitizeHtml, sleep} from "@/app/lib/utilServer";
 
 const db = await open({
   filename: 'db/dev.db',
@@ -29,12 +29,12 @@ export async function updateCurrentPad(newText: string):Promise<void> {
 export async function getPadList(): Promise<SavedPadType[]> {
   const query = "SELECT * FROM SavedPad";
   const result = await db.all(query)
-  console.log('result', result);
+  // console.log('result', result);
 
   return result.map(p => {
     const dateObject = new Date(Number(p.modified));
     const dateString =  `${dateObject.toLocaleDateString()} ${dateObject.toLocaleTimeString()}`
-    console.log('dateString', dateString)
+
     return {
       ...p,
       modified: dateString,
@@ -45,13 +45,18 @@ export async function getPadList(): Promise<SavedPadType[]> {
 export async function savePad(name:string, text:string): Promise<void> {
   const modified = Date.now();
 
+  const sanitizedText = sanitizeHtml(text)
+
   const query = SQL`
-    INSERT INTO SavedPad (name, text, modified) VALUES (${name},${text},${modified})
-      ON CONFLICT(name) DO UPDATE SET text = ${text}, modified = ${modified};
+    INSERT INTO SavedPad (name, text, modified)
+    VALUES (${name},${sanitizedText},${modified})
+    ON CONFLICT(name) DO
+      UPDATE SET text = ${sanitizedText}, modified = ${modified};
   `
 
-  const result = await db.run(query);
-  console.log('result', result);
+  await db.run(query);
+  // const result = await db.run(query);
+  // console.log('result', result);
 
   await sleep(1000)
 

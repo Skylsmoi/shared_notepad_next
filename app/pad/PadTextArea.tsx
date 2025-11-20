@@ -1,21 +1,27 @@
 'use client'
 
 import {updateCurrentPad} from "@/app/pad/action";
-import {ChangeEvent} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 
 interface padType {
   currentPad: string,
 }
 
 export default function PadTextArea(props: padType) {
+  const [pad, setPad] = useState<string>(props.currentPad);
+
+  useEffect(() => {
+    setPad(props.currentPad);
+  }, [props.currentPad]);
+
   const handleChangeText = async (e: ChangeEvent<HTMLTextAreaElement>) => {
-    console.log('e', e)
+    setPad(e.target.value);
     await updateCurrentPad(e.target.value)
   }
 
   return (
     <textarea
-      value={props.currentPad}
+      value={pad}
       onChange={handleChangeText}
       name="PadTextArea"
       autoFocus

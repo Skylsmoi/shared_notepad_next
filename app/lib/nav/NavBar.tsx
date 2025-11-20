@@ -14,6 +14,10 @@ export const NavBar = () => {
         <li className="hover:text-gray-400">
           <Link href='/pad'>Pad</Link>
         </li>
+
+        <li className="hover:text-gray-400">
+          <Link href='/view'>View</Link>
+        </li>
       </ul>
     </nav>
   )

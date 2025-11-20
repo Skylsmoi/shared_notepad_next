@@ -15,8 +15,9 @@ export const SavePadButton = (props: SavePadButtonProps) => {
   const dialogElementRef = useRef<HTMLDialogElement>(null);
   const [isSavePadPending, startSavePadTransition] = useTransition();
 
-  if (isSavePadPending) {
-    return (<div>Saving...</div>)
+  const handleChangePadName = (e:ChangeEvent<HTMLInputElement>): void => {
+    setMessage('')
+    setPadName(e.target.value)
   }
 
   const handleClickSaveButton = async () => {
@@ -40,7 +41,13 @@ export const SavePadButton = (props: SavePadButtonProps) => {
   }
 
   const handleClickModalSaveButton = () => {
-    savePad(padName, props.currentPad);
+    startSavePadTransition(async () => {
+      await savePad(padName, props.currentPad);
+      startSavePadTransition(() => {
+        setMessage('Pad saved');
+      })
+    })
+
     dialogElementRef.current?.close()
   }
 
@@ -51,7 +58,9 @@ export const SavePadButton = (props: SavePadButtonProps) => {
   return (
     <>
       <div className='SavePadButton flex flex-row items-center gap-4'>
-        <div className='text-red-100 opacity-75'>{message}</div>
+        <div className='text-red-100 opacity-75'>
+          {isSavePadPending ? 'Saving...' : message }
+        </div>
 
         <label className='flex flex-row gap-2 items-center'>
           Pad name:
@@ -59,7 +68,7 @@ export const SavePadButton = (props: SavePadButtonProps) => {
             type='text'
             name='SavePadName'
             className='border-1 border-gray-50 rounded-sm px-2 py-1'
-            onChange={(e:ChangeEvent<HTMLInputElement>): void => setPadName(e.target.value)}
+            onChange={handleChangePadName}
           />
         </label>
 
