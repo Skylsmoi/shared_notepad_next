@@ -1,7 +1,11 @@
 'use client'
 
+import { useContext } from 'react';
+import { usePathname } from 'next/navigation'
 import {deletePad, setCurrentPad} from "@/app/pad/action";
 import {Button} from "@/app/lib/Button/Button";
+import { LoginContext } from "@/app/lib/loginContext";
+import Link from 'next/link'
 
 interface SavedPadType {
   id: number;
@@ -15,6 +19,21 @@ interface SavedPadListProps {
 }
 
 export const SavedPadList = (props: SavedPadListProps) => {
+  const pathname = usePathname()
+
+  const { login, setLogin } = useContext(LoginContext)
+  if (login.isLoggedIn === false) {
+    return (
+      <div>
+        Not logged in. <br />
+
+        <Button title='Login' onClick={() => {}}>
+          <Link href={`/login?from=${pathname}`}>Login</Link>
+        </Button>
+      </div>
+    )
+  }
+
   return (
     <div className='flex flex-col gap-2'>
       <Button
