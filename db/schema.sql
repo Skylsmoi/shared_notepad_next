@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS "Pad" (
+	"id"	INTEGER,
+	"text"	TEXT DEFAULT '',
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+CREATE TABLE sqlite_sequence(name,seq);
+CREATE TABLE IF NOT EXISTS "user" (
+	"id"	INTEGER,
+	"login"	TEXT NOT NULL,
+	"password"	TEXT NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "SavedPad" (
+	"id"	INTEGER,
+	"userId"	INTEGER,
+	"name"	TEXT NOT NULL DEFAULT '' UNIQUE,
+	"text"	TEXT DEFAULT '',
+	"modified"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("userId") REFERENCES "user"("id")
+);
