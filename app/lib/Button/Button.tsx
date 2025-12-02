@@ -3,6 +3,7 @@ import {MouseEventHandler, ReactNode} from "react";
 interface ButtonProps {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   title: string;
+  type?: "button" | "submit" | "reset" | undefined;
   customClass?: string;
   rounded?: boolean;
   children: ReactNode;
@@ -23,6 +24,7 @@ export const Button = ({
       `}
       onClick={props.onClick}
       title={props.title}
+      type={props.type}
     >
       {props.children}
     </button>

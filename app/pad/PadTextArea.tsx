@@ -11,6 +11,8 @@ export default function PadTextArea(props: padType) {
   const [pad, setPad] = useState<string>(props.currentPad);
 
   useEffect(() => {
+    // FIXME - Bad pattern, textarea should not be controlled and sync with db
+    // This is only for trying
     setPad(props.currentPad);
   }, [props.currentPad]);
 

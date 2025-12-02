@@ -6,13 +6,20 @@ import {
 } from "react";
 import { useRouter, useSearchParams } from 'next/navigation'
 import {LoginContext} from "@/app/lib/loginContext";
+import {InputText} from "@/app/lib/Input/InputText";
+import {Button} from "@/app/lib/Button/Button";
+
+interface loginResponseInterface {
+  success: boolean;
+  message: string;
+}
 
 export default function Login() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { login, setLogin } = useContext(LoginContext)
 
-  const handleLogin = async (prevState: number | null, formData: FormData):Promise<number> => {
+  const handleLogin = async (prevState: loginResponseInterface | null, formData: FormData):Promise<loginResponseInterface> => {
     const login = formData.get('login')
     const password = formData.get('password')
 
@@ -25,50 +32,63 @@ export default function Login() {
       }),
     })
 
+    const responseJson = await response.json()
+    console.log('responseJson', responseJson)
+
     if (response.ok) {
-      const user = await response.json()
       setLogin({
-        id: user.id,
-        login: user.login,
+        id: responseJson.id,
+        login: responseJson.login,
         isLoggedIn: true
       })
 
-      return 1
+      return { success: true, message: 'success', }
     }
 
-    return 0
+    if (response.status === 500) {
+      return { success: false, message: 'Une erreur est survenue', }
+    }
+
+    switch (responseJson.code) {
+      case 2001: return { success: false, message: 'Identifiant invalide' }
+      default: return { success: false, message: 'Erreur inconnue', }
+    }
   }
 
-  const [message, formAction, isPending] = useActionState(handleLogin, null)
+  const [response, formAction, isPending] = useActionState(handleLogin, null)
 
   useEffect(() => {
-    if (message === 1) {
+    if (response?.success === true) {
       const destination = searchParams.get('from') ?? '/pad'
       router.push(destination)
     }
-  }, [message, router, searchParams])
+  }, [response, router, searchParams])
 
   return (
     <form
       action={formAction}
-      className="flex flex-col"
+      className="flex flex-col gap-4 w-1/4 m-auto"
     >
-      <label>
-        Login:
-        <input type='text' name='login' />
-      </label>
+      <InputText
+        name='login'
+        label='Login'
+        customClassLabel='flex flex-row justify-between items-center'
+      />
 
-      <label>
-        Password:
-        <input type='text' name='password' />
-      </label>
+      <InputText
+        name='password'
+        label='Password'
+        customClassLabel='flex flex-row justify-between items-center'
+      />
 
-      <button type="submit">Login</button>
+      <Button title='Login' type='submit'>Login</Button>
 
       <div>
-        {isPending ? "Loading..." : message}
+        {isPending ? "Loading..." : ''}
       </div>
-
+      <div>
+        {response?.success === false && response?.message}
+      </div>
     </form>
   )
 }

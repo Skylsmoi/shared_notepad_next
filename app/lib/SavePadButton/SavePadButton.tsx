@@ -4,6 +4,7 @@ import {ChangeEvent, useState, useRef, useTransition} from 'react';
 import {getPadList, savePad} from '@/app/pad/action'
 import {Button} from "@/app/lib/Button/Button";
 import {Modal} from "@/app/lib/Modal/Modal";
+import {InputText} from "@/app/lib/Input/InputText";
 
 interface SavePadButtonProps {
   currentPad: string
@@ -62,15 +63,13 @@ export const SavePadButton = (props: SavePadButtonProps) => {
           {isSavePadPending ? 'Saving...' : message }
         </div>
 
-        <label className='flex flex-row gap-2 items-center'>
-          Pad name:
-          <input
-            type='text'
-            name='SavePadName'
-            className='border-1 border-gray-50 rounded-sm px-2 py-1'
-            onChange={handleChangePadName}
-          />
-        </label>
+        <InputText
+          name='SavePadName'
+          label='Pad name:'
+          customClassLabel='flex flex-grow gap-2 items-center'
+          customClassInput='border-1 border-gray-50 rounded-sm px-2 py-1'
+          onChange={handleChangePadName}
+        />
 
         <Button
           onClick={handleClickSaveButton}

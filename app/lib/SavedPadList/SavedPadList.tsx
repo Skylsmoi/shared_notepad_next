@@ -27,9 +27,11 @@ export const SavedPadList = (props: SavedPadListProps) => {
       <div>
         Not logged in. <br />
 
-        <Button title='Login' onClick={() => {}}>
-          <Link href={`/login?from=${pathname}`}>Login</Link>
-        </Button>
+        <Link href={`/login?from=${pathname}`}>
+          <Button title='Login' onClick={() => {}}>
+            Login
+          </Button>
+        </Link>
       </div>
     )
   }
